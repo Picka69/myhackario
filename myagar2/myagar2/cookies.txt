@@ -1,0 +1,6 @@
+# HTTrack Website Copier Cookie File
+# This file format is compatible with Netscape cookies
+.google.com	TRUE	/	FALSE	1999999999	NID	214=LqfNLvufzWBUscEqUmABBqGVKDqDy2Rx4Gp9Ol8PzCM4rwJ7Pf5DKxBiXxIAdLg-ql8MwafID8QjEEEXKWFY7JrpzgPtlBwExTpmi5QPd1_gESw_VketF_Nq1OUP5aJzLTtYBi_kxTydu-itCvRvSgBUhIt8FlMW5VePYVLA-R4
+.adinplay.com	TRUE	/	FALSE	1999999999	__cfduid	d1d0f35f03f251c77636ea7058bd8725a1619429539
+api.adinplay.com	TRUE	/	FALSE	1999999999	SameSite	Lax
+

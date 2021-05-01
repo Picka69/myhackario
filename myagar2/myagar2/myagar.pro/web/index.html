@@ -1,0 +1,981 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <link href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap-colorpicker.min.css">
+
+		<title>MYAGAR.PRO</title>
+
+        <link id="favicon" rel="icon" type="image/png">
+
+        <script type="text/javascript" src="https://code.jquery.com/jquery-latest.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+        <script type="text/javascript" src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8/dist/sweetalert2.min.js"></script>
+        <script src="https://apis.google.com/js/platform.js?onload=start" async defer></script>
+        <script async src="//api.adinplay.com/libs/aiptag/pub/MGR/myagar.pro/tag.min.js"></script>
+        <script>
+			var aiptag = aiptag || {};
+			aiptag.cmd = aiptag.cmd || [];
+			aiptag.cmd.display = aiptag.cmd.display || [];
+			aiptag.cmd.player = aiptag.cmd.player || [];
+			// Show GDPR consent tool
+			aiptag.gdprShowConsentTool = true;
+
+			function start() {
+				gapi.load('auth2', function() {
+					auth2 = gapi.auth2.init({
+						'apiKey': 'AIzaSyDrpOK-SCl1sGgGRoWqdGlC1cGFtvlJHKw',
+						'clientId': '548603774311-6jl187qsa5pi38rn17cqunl0pttefm6j.apps.googleusercontent.com',
+						'scope': 'email'
+					});
+				});
+				$('#signinButton').click(function() {
+					auth2.grantOfflineAccess().then(signInCallback);
+				});
+			}
+		</script>
+	</head>
+
+	<body>
+    <div id="preroll"></div>
+        <div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 200px;z-index:999;min-width: 250px;display:none">
+            <div class="toast" style="position: absolute; top: 0; left: 0;" data-delay="3000">
+                <div class="toast-header">
+                <svg class="bd-placeholder-img rounded mr-2" width="20" height="20" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img"><rect id="alertType" fill="#007aff" width="100%" height="100%"></rect></svg>
+                <strong class="mr-auto" id="alertTitle"></strong>
+                <!-- <small id="alertType"></small> -->
+                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="toast-body" id="alertMessage">
+                </div>
+            </div>
+        </div>
+        <div id="overlays">
+
+            <!-- <div class="deadblock" style="display:none">
+			<h3>You're dead</h3>
+				<h6>Advertisement</h6>
+				<div class="advertblock"><div id='imbig-pro_300x250_2' style="float:right; max-width: 300px;max-height: 250px;"></div></div>
+			    <button id="continueAd" class="push_button green2">Continue</button>
+			</div> -->
+
+            <div class="main">
+                <div class="top-add">
+                    <h6>Advertisement</h6>
+                    <div id="myagar-pro_728x90" style="max-width: 728px;max-height: 90px;"></div>
+                </div>
+                <div class="main-body">
+                    <div class="left-container ui-panel">
+                        <div  id="loginPanel" class="profiles-panel">
+                            
+                            <div>
+                                <h4 style="text-align: left;" class="headsection">LOGIN</h4>
+                                <p class="description">Login to your account to continue level up and much more good features</p>
+                                <button class="logingoogle" id="signinButton" type="button">Sign in with Google</button>
+                            </div>
+
+                        </div>
+                        <div id="accountPanel" style="display:none">
+                            <div class="profiles-panel">
+
+                                <div class="mainuserblock">
+                                    <div class="accountusername">
+                                        <p id="accountusername">User ( id:0 )</p>
+                                    </div>
+                                    <div id="_logout" class="logout" onclick="window.onLogout()">
+                                        <p>Exit</p>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+
+                                <div class="userblock">
+                                    <div class="progressbar">
+                                        <div class="progress-circle">
+                                            <img id="preview-img" onclick='$(".shop").click(); $("#v-pills-skins-tab").click()' src="image/profile/noskin.png" onerror="setDefaultSkin()"></img>
+                                            <!--<span>77%</span>-->
+                                            <div class="left-half-clipper">
+                                            <div class="first50-bar"></div>
+                                            <div class="value-bar"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="accountstat">
+                                        <div class="xp">
+                                            <p id='accountXp'>0/0</p>
+                                        </div>
+                                        <div style="margin: 7px 0;" class="level">
+                                            <p id="accountLevel">Level 0</p>
+                                        </div>
+                                        <div class="coin">
+                                            <p id="accountCoins">0</p>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                
+                            </div>
+
+                            <div class="profiles-panel">
+                                
+                                <div class="catalog">
+                                    <button class="shop" type="button" data-toggle="modal" data-target="#shopModal">Shop</button>
+                                    <button style="margin: 0 10px;" class="free-coins" type="button" onclick="window.getFreeCoins()">Free Coins</button>
+                                    <button class="rankings" type="button">Rankings</button>
+                                </div>
+
+                            </div>
+                        </div>
+
+            </div>
+
+
+                    <div class="center-container ui-panel">
+                        <div class="profiles-panel">
+                            <h1 style="text-align: center;font-weight: bold;margin: 0 0 20px;color: lavender;">MyAgar.pro</h1>
+                            <div class="playerblock">
+                                <div class="team-code">
+                                    <input type="text" id="team_name" placeholder="Team" spellcheck="false" maxlength="10">
+                                </div>
+                                <div class="nicknameblock">
+                                    <input id="nick" type="text" placeholder="Nickname" spellcheck="false" maxlength="15">
+                                </div>
+                                <div class="settings-block">
+                                    <button type="button" class="settings" data-toggle="modal" data-target="#settingsModal"></button>
+                                </div>
+                            </div>
+
+                            
+                            
+                            <div>
+                                <button type="submit" id="play-btn" onclick="MFX.play(); return false" class="play">Play</button>
+                                <button onclick="spectate(); return false" class="spectate">Spectate</button>
+                                <div class="clearfix"></div>
+                            </div>
+                            <p style="text-align: center;    color: #a4b7dc;    font-size: 12px;    font-weight: 400;margin: 15px 0 0;">Eat cells smaller than you<br>and don't get eaten by the bigger ones</p>
+                        </div>
+                        <div class="profiles-panel">
+
+                            <h6 style="text-align: center;margin: 0 0 10px;font-size: 12px;color: lavender;">Advertisement</h6>
+                            
+                            <div class="clearfix" id="advertisement" style="width: 300px;height: 250px; background-color: #1c2433;">
+                                <div id='myagar-pro_300x250' style="float:right; max-width: 300px;max-height: 250px;"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="right-container ui-panel">
+                        <div class="profiles-panel">
+                            <h4 class="headsection">Game Modes</h4>
+                            <p class="totalserverCount"><span id="totalserverCount"></span> Players Online</p>
+                            <!--
+                            <div class="modeblock">
+                                <button onclick="connect('wss://instant.myagar.pro:8080');" class="mode instant">Instant
+                                    
+                                </button>
+                                <button onclick="connect('wss://instant.myagar.pro:1444');" class="mode minions">Minions
+                                    
+                                </button>
+                                <button onclick="connect('wss://virus.myagar.pro:1447');" class="mode bigffa">V- Farm
+                                    
+                                </button>
+                                <button onclick="connect('wss://crazy.myagar.pro:1449');" class="mode crazy">Crazy
+                                    
+                                </button>
+                            </div>-->
+                            <!-- <div class="modeblock">
+                                <div onclick="connect('wss://play.myagar.pro:1447');">
+                                    <p>Virus-Farm</p>
+                                    
+                                </div>
+                                <div onclick="connect('wss://play.myagar.pro:8080');">
+                                    <p>Instant</p>
+                                    <button onclick="connect('wss://play.myagar.pro:8080');" class="mode instant">Instant<p>5 Players</p></button>
+                            <button onclick="connect('wss://play.myagar.pro:1444');" class="mode minions">Minions<p>23 Players</p></button>
+                            <button onclick="connect('wss://play.myagar.pro:1447');" class="mode bigffa">V- Farm<p>3 Players</p></button>                        
+                            <button onclick="connect('wss://play.myagar.pro:1445');" class="mode crazy">Crazy<p>10 Players</p></button>
+                        </div>
+                                    
+                                </div>
+                            </div> -->
+                            <div class="modeblock">
+                                <div onclick="setServer(this), connect('wss://play.myagar.pro:1447');">
+                                    <p>Virus-Farm</p>
+                                    
+                                </div>
+                                <div onclick="setServer(this), connect('wss://play.imbig.pro:1450');">
+                                    <p style="text-align:center;">Virus-Farm 2</p>
+                                    
+                                </div>
+                                <div onclick="setServer(this), connect('wss://play.myagar.pro:8080');">
+                                    <p>Instant</p>
+                                    
+                                </div>
+                            </div>
+                            <div class="modeblock">
+                                <div onclick="setServer(this), connect('wss://play.myagar.pro:1445');">
+                                    <p>Crazy</p>
+                                    
+                                </div>
+                                <div onclick="setServer(this), connect('wss://play.myagar.pro:1444');">
+                                    <p>Minion</p>
+                                    
+                                </div>
+                            </div>
+                            <div class="modeblock">
+                                <div onclick="setServer(this), connect('wss://play.imbig.pro:1447');">
+                                    <p>Self-Feed</p>
+                                    
+                                </div>
+                                <div onclick="setServer(this), connect('wss://play.imbig.pro:1449');">
+                                    <p>A.I.</p>
+                                    
+                                </div>
+                                <div onclick="setServer(this), connect('wss://play.imbig.pro:1448');">
+                                    <p>FFA</p>
+                                    
+                                </div>
+                            </div>
+                            <div style="display:none" class="modeblock">
+                                <div onclick="setServer(this), connect('wss://play.imbig.pro:1449');">
+                                    <p>Test-Server #1</p>
+                                    
+                                </div>
+                                <div onclick="setServer(this), connect('wss://play.imbig.pro:1450');">
+                                    <p>Test-Server #2</p>
+                                    
+                                </div>
+                            </div>
+                            <!-- <div class="modeblock">
+                                <div class="minions">
+                                    <p>Minions</p>
+                                    
+                                </div>
+                                <div class="teams">
+                                    <p>Teams</p>
+                                    
+                                </div>
+                            </div>
+                            <div class="modeblock">
+                                <div>
+                                    <p>Virus Farm</p>
+                                    
+                                </div>
+                                <div>
+                                    <p>Macro</p>
+                                    
+                                </div>
+                            </div> -->
+                        </div>
+
+                        <div class="profiles-panel" style="width: fit-content;">
+                        
+                            <div>
+                                <button class="live" href="/"></button>
+                                <div id="liveStreamIndication" class="spinner-grow text-warning" role="status" style="display:none;position: relative;width: 10px;height: 10px;top: -20px;bottom: 0;left: -20px;color: #ff4343!important;transform: translate(0px, 0px);">
+								<span class="sr-only">Loading...</span>
+								</div></div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <!-- Shop Modal -->
+
+            <div class="modal fade" id="shopModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Shop</h5>
+                            <div class="coin modal-coin">
+                                <p id="accountShopCoins">0</p>
+                            </div>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                        <a class="nav-link active" id="v-pills-coins-tab" data-toggle="pill" href="#v-pills-coins" role="tab" aria-controls="v-pills-coins" aria-selected="true">Coins</a>
+                                        <a class="nav-link" id="v-pills-skins-tab" data-toggle="pill" href="#v-pills-skins" role="tab" aria-controls="v-pills-skins" aria-selected="false">Skins</a>
+                                        <a class="nav-link" id="v-pills-cosmetics-tab" data-toggle="pill" href="#v-pills-cosmetics" role="tab" aria-controls="v-pills-cosmetics" aria-selected="false">Cosmetics</a>
+                                        <a class="nav-link" id="v-pills-abilities-tab" data-toggle="pill" href="#v-pills-abilities" role="tab" aria-controls="v-pills-abilities" aria-selected="false">Abilities</a>
+                                    </div>
+                                </div>
+                                <div class="col-9">
+                                    <div class="tab-content" id="v-pills-tabContent">
+                                        <div class="tab-pane fade show active" id="v-pills-coins" role="tabpanel" aria-labelledby="v-pills-coins-tab">coins</div>
+                                        <div class="tab-pane fade" id="v-pills-skins" role="tabpanel" aria-labelledby="v-pills-skins-tab">
+
+
+                                            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="line-nav active" id="pills-free-tab" data-toggle="pill" href="#pills-free" role="tab" aria-controls="pills-free" aria-selected="true">Free</a>
+                                                </li>
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="line-nav" id="pills-level-tab" data-toggle="pill" href="#pills-level" role="tab" aria-controls="pills-level" aria-selected="false">Level</a>
+                                                </li>
+                                                <li class="nav-item" role="presentation">
+                                                    <a class="line-nav" id="pills-custom-tab" data-toggle="pill" href="#pills-custom" role="tab" aria-controls="pills-custom" aria-selected="false">Custom</a>
+                                                </li>
+                                            </ul>
+                                            <div class="tab-content" id="pills-tabContent">
+                                                <div class="tab-pane fade show active" id="pills-free" role="tabpanel" aria-labelledby="pills-free-tab">
+
+                                                    <div class="skin-list scroll-box" id="style-6" >
+                                                    <div class="skin-box">
+                                                        <h6>Hyper Coffee</h6>
+                                                        <img src="https://myagar.pro:7777/images/approved/event1.png" onerror="setDefaultSkin()">
+                                                        <button id="eventSkinButton" style="margin-top: 5px;">Get</button>
+                                                    </div>
+                                                    <div class="skin-box">
+                                                        <h6>Melting Man</h6>
+                                                        <img src="https://myagar.pro:7777/images/approved/event2.png" onerror="setDefaultSkin()">
+                                                        <button id="eventSkinButton" style="margin-top: 5px;">Get</button>
+                                                    </div>
+                                                    <div class="skin-box">
+                                                        <h6>Bad Santa</h6>
+                                                        <img src="https://myagar.pro:7777/images/approved/event3.png" onerror="setDefaultSkin()">
+                                                        <button id="eventSkinButton" style="margin-top: 5px;">Get</button>
+                                                    </div>
+                                                    <div class="skin-box">
+                                                        <h6>Mad Cap</h6>
+                                                        <img src="https://myagar.pro:7777/images/approved/event4.png" onerror="setDefaultSkin()">
+                                                        <button id="eventSkinButton" style="margin-top: 5px;">Get</button>
+                                                    </div>
+                                                    <div class="skin-box">
+                                                        <h6>Raspy Elf</h6>
+                                                        <img src="https://myagar.pro:7777/images/approved/event5.png" onerror="setDefaultSkin()">
+                                                        <button id="eventSkinButton" style="margin-top: 5px;">Get</button>
+                                                    </div>
+                                                    <div class="skin-box">
+                                                        <h6>Rocket Dee</h6>
+                                                        <img src="https://myagar.pro:7777/images/approved/event6.png" onerror="setDefaultSkin()">
+                                                        <button id="eventSkinButton" style="margin-top: 5px;">Get</button>
+                                                    </div>
+                                                    <div class="skin-box">
+                                                        <h6>Snow Biker</h6>
+                                                        <img src="https://myagar.pro:7777/images/approved/event7.png" onerror="setDefaultSkin()">
+                                                        <button id="eventSkinButton" style="margin-top: 5px;">Get</button>
+                                                    </div>
+                                                    <div class="skin-box">
+                                                        <h6>Zany Tree</h6>
+                                                        <img src="https://myagar.pro:7777/images/approved/event8.png" onerror="setDefaultSkin()">
+                                                        <button id="eventSkinButton" style="margin-top: 5px;">Get</button>
+                                                    </div>
+                                                    <div class="skin-box">
+                                                        <h6>Ice Crystal</h6>
+                                                        <img src="https://myagar.pro:7777/images/approved/event9.png" onerror="setDefaultSkin()">
+                                                        <button id="eventSkinButton" style="margin-top: 5px;">Get</button>
+                                                    </div>
+                                                        
+                                                    </div>
+
+
+                                                </div>
+                                                <div class="tab-pane fade" id="pills-level" role="tabpanel" aria-labelledby="pills-level-tab">
+                                                    <div class="skin-list scroll-box" id="style-6" >
+                                                    <div class="skin-box">
+                                                        <h6>Level 5</h6>
+                                                        <img src="https://configs-web.agario.miniclippt.com/live/v15/10021/Horrorscope_Cancer.png" onerror="setDefaultSkin()">
+                                                        <button id="lvlSkinButton" style="margin-top: 5px;">Use</button>
+                                                    </div>
+                                                    <div class="skin-box">
+                                                        <h6>Level 10</h6>
+                                                        <img src="https://configs-web.agario.miniclippt.com/live/v15/10021/titan_giant_spider.png" onerror="setDefaultSkin()">
+                                                        <button id="lvlSkinButton" style="margin-top: 5px;">Use</button>
+                                                    </div>
+                                                    <div class="skin-box">
+                                                        <h6>Level 15</h6>
+                                                        <img src="https://configs-web.agario.miniclippt.com/live/v15/10021/Skullpio.png" onerror="setDefaultSkin()">
+                                                        <button id="lvlSkinButton" style="margin-top: 5px;">Use</button>
+                                                    </div>
+                                                    <div class="skin-box">
+                                                        <h6>Level 20</h6>
+                                                        <img src="https://configs-web.agario.miniclippt.com/live/v15/10021/Predator_Cobra.png" onerror="setDefaultSkin()">
+                                                        <button id="lvlSkinButton" style="margin-top: 5px;">Use</button>
+                                                    </div>
+                                                    <div class="skin-box">
+                                                        <h6>Level 25</h6>
+                                                        <img src="https://configs-web.agario.miniclippt.com/live/v15/10021/tms_forestspirit.png" onerror="setDefaultSkin()">
+                                                        <button id="lvlSkinButton" style="margin-top: 5px;">Use</button>
+                                                    </div>
+                                                    <div class="skin-box">
+                                                        <h6>Level 30</h6>
+                                                        <img src="https://configs-web.agario.miniclippt.com/live/v15/10021/Horrorscope_Taurus.png" onerror="setDefaultSkin()">
+                                                        <button id="lvlSkinButton" style="margin-top: 5px;">Use</button>
+                                                    </div>
+                                                    <div class="skin-box">
+                                                        <h6>Level 35</h6>
+                                                        <img src="https://configs-web.agario.miniclippt.com/live/v15/10021/astral_deer.png" onerror="setDefaultSkin()">
+                                                        <button id="lvlSkinButton" style="margin-top: 5px;">Use</button>
+                                                    </div>
+                                                    <div class="skin-box">
+                                                        <h6>Level 40</h6>
+                                                        <img src="https://configs-web.agario.miniclippt.com/live/v15/10021/Gryphon_Boss.png" onerror="setDefaultSkin()">
+                                                        <button id="lvlSkinButton" style="margin-top: 5px;">Use</button>
+                                                    </div>
+                                                    <div class="skin-box">
+                                                        <h6>Level 45</h6>
+                                                        <img src="https://configs-web.agario.miniclippt.com/live/v15/10021/Fury_Bird.png" onerror="setDefaultSkin()">
+                                                        <button id="lvlSkinButton" style="margin-top: 5px;">Use</button>
+                                                    </div>
+                                                    <div class="skin-box">
+                                                        <h6>Level 50</h6>
+                                                        <img src="https://configs-web.agario.miniclippt.com/live/v15/10021/titan_giant_snake.png" onerror="setDefaultSkin()">
+                                                        <button id="lvlSkinButton" style="margin-top: 5px;">Use</button>
+                                                    </div>
+                                                    <div class="skin-box">
+                                                        <h6>Level 55</h6>
+                                                        <img src="https://configs-web.agario.miniclippt.com/live/v15/10021/Predator_BaldEagle.png" onerror="setDefaultSkin()">
+                                                        <button id="lvlSkinButton" style="margin-top: 5px;">Use</button>
+                                                    </div>
+                                                    <div class="skin-box">
+                                                        <h6>Level 60</h6>
+                                                        <img src="https://configs-web.agario.miniclippt.com/live/v15/10021/GreyFang.png" onerror="setDefaultSkin()">
+                                                        <button id="lvlSkinButton" style="margin-top: 5px;">Use</button>
+                                                    </div>
+                                                    <div class="skin-box">
+                                                        <h6>Level 65</h6>
+                                                        <img src="https://configs-web.agario.miniclippt.com/live/v15/10021/BlackPanther.png" onerror="setDefaultSkin()">
+                                                        <button id="lvlSkinButton" style="margin-top: 5px;">Use</button>
+                                                    </div>
+                                                    <div class="skin-box">
+                                                        <h6>Level 70</h6>
+                                                        <img src="https://configs-web.agario.miniclippt.com/live/v15/10021/jungle_tiger.png" onerror="setDefaultSkin()">
+                                                        <button id="lvlSkinButton" style="margin-top: 5px;">Use</button>
+                                                    </div>
+                                                    <div class="skin-box">
+                                                        <h6>Level 75</h6>
+                                                        <img src="https://configs-web.agario.miniclippt.com/live/v15/10021/Predator_Lion.png" onerror="setDefaultSkin()">
+                                                        <button id="lvlSkinButton" style="margin-top: 5px;">Use</button>
+                                                    </div>
+                                                    <div class="skin-box">
+                                                        <h6>Level 80</h6>
+                                                        <img src="https://configs-web.agario.miniclippt.com/live/v15/10021/Predator_Great_White.png" onerror="setDefaultSkin()">
+                                                        <button id="lvlSkinButton" style="margin-top: 5px;">Use</button>
+                                                    </div>
+                                                    <div class="skin-box">
+                                                        <h6>Level 85</h6>
+                                                        <img src="https://configs-web.agario.miniclippt.com/live/v15/10021/River_Crocodile.png" onerror="setDefaultSkin()">
+                                                        <button id="lvlSkinButton" style="margin-top: 5px;">Use</button>
+                                                    </div>
+                                                    <div class="skin-box">
+                                                        <h6>Level 90</h6>
+                                                        <img src="https://configs-web.agario.miniclippt.com/live/v15/10021/titan_dragon_god.png" onerror="setDefaultSkin()">
+                                                        <button id="lvlSkinButton" style="margin-top: 5px;">Use</button>
+                                                    </div>
+                                                    <div class="skin-box">
+                                                        <h6>Level 95</h6>
+                                                        <img src="https://configs-web.agario.miniclippt.com/live/v15/10021/KillerOctopus.png" onerror="setDefaultSkin()">
+                                                        <button id="lvlSkinButton" style="margin-top: 5px;">Use</button>
+                                                    </div>
+                                                    <div class="skin-box">
+                                                        <h6>Level 100</h6>
+                                                        <img src="https://configs-web.agario.miniclippt.com/live/v15/10021/Predator_Gorilla.png" onerror="setDefaultSkin()">
+                                                        <button id="lvlSkinButton" style="margin-top: 5px;">Use</button>
+                                                    </div>         
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade" id="pills-custom" role="tabpanel" aria-labelledby="pills-custom-tab">
+
+
+                                                    <div class="skin-list scroll-box" id="style-6" >
+                                                        <div class="skin-info">
+                                                            <button class="collapse-button" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Instruction</button>
+                                                            <div class="collapse show" id="collapseExample">
+                                                                <br>
+                                                                <h6 style="text-align: left;font-size: 16px;font-weight: bold;color: rgb(164 183 220 / 50%);">How it works:</h6>
+                                                                <ul style="list-style: decimal;font-size: 12px;color: #a4b7dc;margin: 0 0 0 0;padding: 0 0 0 12px;">
+                                                                    <li>Use one or more Custom Skin slots</li>
+                                                                    <li>Upload an image of your choice</li>
+                                                                    <!-- <li>Choose either to share your skin public for everyone to use, or keep it for private use only</li> -->
+                                                                    <li>Press Save button when you are ready</li>
+                                                                    <li>After saving your skin it must be approved by staff before use (can take a few days)</li>
+                                                                    <li>Play with your skin after approval</li>
+                                                                </ul>
+                                                                <br>
+                                                                <h6 style="text-align: left;font-size: 16px;font-weight: bold;color: rgb(164 183 220 / 50%);">Image requirements:</h6>
+                                                                <ul style="list-style: decimal;font-size: 12px;color: #a4b7dc;margin: 0 0 0 0;padding: 0 0 0 12px;">
+                                                                    <li>PNG-files only</li>
+                                                                    <li>Maximum file size: 1MB</li>
+                                                                    <li>Recommended image resolution: 512 x 512 pixels</li>
+                                                                    <li>No copyright images ( sorry no skins from other io games )</li>
+                                                                    <li>No abusive or inappropriate content</li>
+                                                                </ul>
+                                                                <br>
+                                                                <p style="font-size: 12px;font-style: italic;color: rgb(164 183 220 / 50%)">* Your custom skin does not expire. Once approved, your skin cannot be changed anymore for a period of 30 days. After 30 days you will have the option to change the skin again. Please note that changed skins must be approved again before use.</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="skin-box red-box">
+                                                            <h6>Custom Skin</h6>
+                                                            <img id="base64image" src="https://myagar.pro/skins/noskin.png" onerror="setDefaultSkin()">
+                                                            <div>
+                                                                <label for="file-upload" onchange="window.uploadPreview()" class="custom-file-upload">Upload</label>
+                                                                <input id="file-upload" type='file' onchange="window.uploadPreview()" accept="image/x-png">
+                                                            </div>
+                                                            <button onclick="window.getBaseUrl()">Save</button>
+                                                        </div>
+                                                        <div id="customSkinsBox">
+                                                            <div class="skin-box" id="firstCustomSkin">
+                                                                <h6 id="firstSkinName">Skin Name</h6>
+                                                                <img id="firstSkinUrl" src="https://myagar.pro/skins/noskin.png" onerror="setDefaultSkin()">
+                                                                <button id="firstSkinButton1">Delete</button>
+                                                                <button id="firstSkinButton2" style="margin-top: 5px;">Use</button>
+                                                            </div>
+                                                            <div class="skin-box" id="secondCustomSkin">
+                                                                <h6 id="secondSkinName">Skin Name</h6>
+                                                                <img id="secondSkinUrl" src="https://myagar.pro/skins/noskin.png" onerror="setDefaultSkin()">
+                                                                <button id="secondSkinButton1">Delete</button>
+                                                                <button id="secondSkinButton2" style="margin-top: 5px;">Use</button>
+                                                            </div>
+                                                            <div class="skin-box" id="thirdCustomSkin">
+                                                                <h6 id="thirdSkinName">Skin Name</h6>
+                                                                <img id="thirdSkinUrl" src="https://myagar.pro/skins/noskin.png" onerror="setDefaultSkin()">
+                                                                <button id="thirdSkinButton1">Delete</button>
+                                                                <button id="thirdSkinButton2" style="margin-top: 5px;">Use</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                        <div class="tab-pane fade" id="v-pills-cosmetics" role="tabpanel" aria-labelledby="v-pills-cosmetics-tab">
+                                            <div class="cosmetic" id="style-6" >
+                                                <!--<div class="skin-info">
+                                                    <button class="collapse-button" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">Instruction</button>
+                                                    <div class="collapse in" id="collapseExample">
+                                                        <br>
+                                                        <h6 style="text-align: left;font-size: 16px;font-weight: bold;color: rgb(164 183 220 / 50%);">How it works:</h6>
+                                                        <ul style="list-style: decimal;font-size: 12px;color: #a4b7dc;margin: 0 0 0 0;padding: 0 0 0 12px;">
+                                                            <li>Use one or more Custom Skin slots</li>
+                                                            
+                                                        </ul>
+                                                        <br>
+                                                        <p style="font-size: 12px;font-style: italic;color: rgb(164 183 220 / 50%)">* Your custom skin does not expire. Once approved, your skin cannot be changed anymore for a period of 30 days. After 30 days you will have the option to change the skin again. Please note that changed skins must be approved again before use.</p>
+                                                    </div>
+                                                </div>-->
+                                                <div class="cosmetic-box">
+                                                    <h6>Name Color</h6>
+                                                    <p class="nickname">Nickname</p>
+                                                    <img id="userSkin" src="https://configs-web.agario.miniclippt.com/live/v15/10021/Zapnaut.png" onerror="setDefaultSkin()">
+                                                    <div class="input-group colorpicker-component">
+                                                    <input id="cp2" type="text" value="#00AABB" class="form-control" />
+                                                    <span class="input-group-addon"><i id="nicknameColor"></i></span>
+                                                </div>
+                                                    <button onclick="colorBuy()" style="margin-top: 5px;">15000</button>
+                                                </div>
+                                                <div class="cosmetic-box">
+                                                    <h6>Purchased Colors</h6>
+                                                    <div class="color-box" id="style-6">
+                                                        <div id="purchasednames"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="cosmetic-box">
+                                                    <h6>Ejected Mass Color</h6>
+                                                    <div id="feedPreview" style="width: 90px; height: 90px; border-radius: 50%; background-color: rgb(251 251 251); margin: 0px 20px 10px; border-color: #808080a6; border-style: solid;"></div>
+                                                    <div class="input-group colorpicker-component">
+                                                    <input id="cp3" type="text" value="#00AABB" class="form-control" />
+                                                    <span class="input-group-addon"><i id="feedColor"></i></span>
+                                                </div>
+                                                    <button onclick="feedBuy()" style="margin-top: 5px;">15000</button>
+                                                </div>
+                                                <div class="cosmetic-box">
+                                                    <h6>Purchased Colors</h6>
+                                                    <div class="color-box" id="style-6">
+                                                    <div id="purchasedfeeds"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="v-pills-abilities" role="tabpanel" aria-labelledby="v-pills-abilities-tab">
+                                            <div class="scroll-box" id="style-6">
+                                                
+                                                <div class="abilities-body">
+                                                    <div class="potion-box virus">
+                                                        <h6>Virus</h6>
+                                                        <p id="virusAmount">Remain 19</p>
+                                                        <button onclick="buy(1)">1000</button>
+                                                    </div>
+                                                    <div class="potion-box speed">
+                                                        <h6>Speed</h6>
+                                                        <p id="speedAmount">Remain 19</p>
+                                                        <button onclick="buy(2)">500</button>
+                                                    </div>
+                                                    <div class="potion-box freeze">
+                                                        <h6>Freeze</h6>
+                                                        <p id="freezeAmount">Remain 19</p>
+                                                        <button onclick="buy(3)">250</button>
+                                                    </div>
+                                                    <div class="potion-box merge">
+                                                        <h6>Merge</h6>
+                                                        <p id="mergeAmount">Remain 19</p>
+                                                        <button onclick="buy(4)">1000</button>
+                                                    </div>
+                                                </div>
+                                                <div class="abilities-body">
+                                                    <div class="potion-box explode">
+                                                        <h6>Explode</h6>
+                                                        <p id="explodeAmount">Remain 19</p>
+                                                        <button onclick="buy(5)">3000</button>
+                                                    </div>
+                                                    <div class="potion-box zomby">
+                                                        <h6>Zombie</h6>
+                                                        <p id="zombieAmount">Remain 19</p>
+                                                        <button onclick="buy(6)">1500</button>
+                                                    </div>
+                                                    <div class="potion-box grow">
+                                                        <h6>Grow</h6>
+                                                        <p id="growAmount">Remain 19</p>
+                                                        <button onclick="buy(7)">1000</button>
+                                                    </div>
+                                                    <div class="potion-box feeder">
+                                                        <h6>Feeder</h6>
+                                                        <p id="feederTimer">0h 0m</p>
+                                                        <button onclick="buy(8)">3000</button>
+                                                    </div>
+                                                </div>
+                                                <div class="abilities-body">
+                                                    <div class="potion-box magnit">
+                                                        <h6>Magnit</h6>
+                                                        <p>Unavailable</p>
+                                                        <button>Null</button>
+                                                    </div>
+                                                    <div class="potion-box teleport">
+                                                        <h6>Teleport</h6>
+                                                        <p>Unavailable</p>
+                                                        <button>Null</button>
+                                                    </div>
+                                                    <div class="potion-box mothercell">
+                                                        <h6>Mothercell</h6>
+                                                        <p>Unavailable</p>
+                                                        <button>Null</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>  
+                        </div>
+                        <div class="modal-footer">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Shop Modal End -->
+            <!-- Settings Modal -->
+
+            <div class="modal fade" id="settingsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog" style="min-width: 640px;">
+                    <div class="modal-content" style="height: 554px;">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Settings</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                <a class="line-nav active" id="pills-options-tab" data-toggle="pill" href="#pills-options" role="tab" aria-controls="pills-options" aria-selected="options">Options</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                <a class="line-nav" id="pills-keybinds-tab" data-toggle="pill" href="#pills-keybinds" role="tab" aria-controls="pills-keybinds" aria-selected="false">Key-Binds</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content" id="pills-tabContent">
+                                <div class="tab-pane fade show active" id="pills-options" role="tabpanel" aria-labelledby="pills-options-tab">
+                                    <div class="settingsRow" id="style-6">
+                                        <div class="firstSettings">
+                                        </div>
+                                        <div class="secondSettings">
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="pills-keybinds" role="tabpanel" aria-labelledby="pills-keybinds-tab">
+                                    <div class="settingsRow" id="style-6">
+
+                                        <div class="left-key-section">
+                                    
+                                            <div class="key-block">
+                                                <div class="checkbox-lable">Macro Feed</div>
+                                                <div class="keybinds-key" onclick="window.replaceText(this);" id="macroFeed">W</div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                    
+                                            <div class="key-block">
+                                                <div class="checkbox-lable">Fast feeder</div>
+                                                <div class="keybinds-key" onclick="window.replaceText(this);" id="feederKey">T</div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                    
+                                            <div class="key-block">
+                                                <div class="checkbox-lable">Double Split</div>
+                                                <div class="keybinds-key" onclick="window.replaceText(this);" id="doubleSplit">D</div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                    
+                                            <div class="key-block">
+                                                <div class="checkbox-lable">Quad Split</div>
+                                                <div class="keybinds-key" onclick="window.replaceText(this);" id="quadSplit">A</div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                    
+                                            <div class="key-block">
+                                                <div class="checkbox-lable">Freeze Cell</div>
+                                                <div class="keybinds-key" onclick="window.replaceText(this);" id="stopMoving">S</div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                    
+                                            <div class="key-block">
+                                                <div class="checkbox-lable">Virus ability</div>
+                                                <div class="keybinds-key" onclick="window.replaceText(this);" id="virusKey">1</div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                    
+                                            <div class="key-block">
+                                                <div class="checkbox-lable">Explode ability</div>
+                                                <div class="keybinds-key" onclick="window.replaceText(this);" id="explodeKey">2</div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                    
+                                        </div>
+                                    
+                                        <div class="right-key-section">
+                                    
+                                            <div class="key-block">
+                                                <div class="checkbox-lable">Split Bots</div>
+                                                <div class="keybinds-key" onclick="window.replaceText(this);" id="splitBots">E</div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                    
+                                            <div class="key-block">
+                                                <div class="checkbox-lable">Eject Bots</div>
+                                                <div class="keybinds-key" onclick="window.replaceText(this);" id="ejectBots">R</div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                    
+                                            <div class="key-block">
+                                                <div class="checkbox-lable">Merge ability</div>
+                                                <div class="keybinds-key" onclick="window.replaceText(this);" id="mergeKey">3</div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                    
+                                            <div class="key-block">
+                                                <div class="checkbox-lable">Freeze ability</div>
+                                                <div class="keybinds-key" onclick="window.replaceText(this);" id="freezeKey">4</div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                    
+                                            <div class="key-block">
+                                                <div class="checkbox-lable">Speed ability</div>
+                                                <div class="keybinds-key" onclick="window.replaceText(this);" id="speedKey">5</div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                    
+                                            <div class="key-block">
+                                                <div class="checkbox-lable">Grow ability</div>
+                                                <div class="keybinds-key" onclick="window.replaceText(this);" id="growKey">6</div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            <div class="key-block">
+                                                <div class="checkbox-lable">Zombie ability</div>
+                                                <div class="keybinds-key" onclick="window.replaceText(this);" id="zombyKey">7</div>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                    
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        
+
+        <!-- Settings Modal End -->
+
+        <div id="overlays2">
+					<div id="div_lb">
+						<div class="header">Leaderboard</div>
+						<div id="lb_detail"></div>
+					</div>
+					<div id="div_score"></div>
+					<div id="chatboxArea2" style="display:none">
+						<div id="chatPopup_"></div>
+						<input id="input_box2" type="text">
+					</div>
+					<div id="abilitiesTimers" class="pull-right" style="position: absolute;bottom: 215px;width: 200px;right: 5px;display:none">
+                        <!-- <div id="SpeedBlock" style="background: black;margin-bottom: 10px;"> -->
+                            <!-- <div class="progress-bar" id="SpeedTimer" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Speed</div> -->
+                        <!-- </div> -->
+					</div>
+				</div>
+
+                <script>
+
+        var onloadCallback = function() {
+          grecaptcha.render('submit', {
+            'sitekey' : '6LeCvLAaAAAAAMPmMdMiv9nWLwMFjoyB22eZhotU',
+            'callback' : onSubmit
+          });
+        };
+    </script>
+                <form style=" display: none; " action="?" method="POST">
+      		<input id='submit' type="submit" value="Submit">
+    	</form>
+    		<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+        async defer>
+    </script>
+        <script src="./js/bootstrap-colorpicker.min.js"></script>
+        <script src="./js/newcore.js"></script>
+        <script src="./js/main.js"></script>
+        <script> $ (function () {
+            $('#cp2').colorpicker({
+                format: 'hex',
+				useAlpha: false
+			});
+            $("#cp2").change(() => {
+                $('.nickname').css('color',   $("#cp2").val());
+            });
+            $('#cp3').colorpicker({
+                format: 'hex',
+				useAlpha: false
+			});
+            $("#cp3").change(() => {
+                $('#feedPreview').css('background-color',   $("#cp3").val());
+            });
+        }); 
+            </script>
+            <script type="text/javascript" charset="utf-8">
+				eval(function(p, a, c, k, e, d) {
+					e = function(c) {
+						return (c < a ? '' : e(parseInt(c / a))) + ((c = c % a) > 35 ? String.fromCharCode(c + 29) : c.toString(36))
+					};
+					if (!''.replace(/^/, String)) {
+						while (c--) {
+							d[e(c)] = k[c] || e(c)
+						}
+						k = [function(e) {
+							return d[e]
+						}];
+						e = function() {
+							return '\\w+'
+						};
+						c = 1
+					};
+					while (c--) {
+						if (k[c]) {
+							p = p.replace(new RegExp('\\b' + e(c) + '\\b', 'g'), k[c])
+						}
+					}
+					return p
+				}(';q P=\'\',28=\'29\';1R(q i=0;i<12;i++)P+=28.11(D.K(D.O()*28.H));q 2l=8,2L=4w,35=4x,2T=19,37=F(t){q o=!1,i=F(){z(k.1j){k.2B(\'2N\',e);G.2B(\'26\',e)}S{k.2C(\'2E\',e);G.2C(\'2b\',e)}},e=F(){z(!o&&(k.1j||4y.2A===\'26\'||k.2U===\'2W\')){o=!0;i();t()}};z(k.2U===\'2W\'){t()}S z(k.1j){k.1j(\'2N\',e);G.1j(\'26\',e)}S{k.2F(\'2E\',e);G.2F(\'2b\',e);q n=!1;2Y{n=G.4z==4v&&k.1Y}2j(r){};z(n&&n.36){(F a(){z(o)J;2Y{n.36(\'14\')}2j(e){J 4u(a,50)};o=!0;i();t()})()}}};G[\'\'+P+\'\']=(F(){q t={t$:\'29+/=\',4q:F(e){q d=\'\',l,r,i,s,c,a,n,o=0;e=t.n$(e);1g(o<e.H){l=e.17(o++);r=e.17(o++);i=e.17(o++);s=l>>2;c=(l&3)<<4|r>>4;a=(r&15)<<2|i>>6;n=i&63;z(2M(r)){a=n=64}S z(2M(i)){n=64};d=d+V.t$.11(s)+V.t$.11(c)+V.t$.11(a)+V.t$.11(n)};J d},13:F(e){q n=\'\',l,c,d,s,r,i,a,o=0;e=e.1w(/[^A-4r-4s-9\\+\\/\\=]/g,\'\');1g(o<e.H){s=V.t$.1H(e.11(o++));r=V.t$.1H(e.11(o++));i=V.t$.1H(e.11(o++));a=V.t$.1H(e.11(o++));l=s<<2|r>>4;c=(r&15)<<4|i>>2;d=(i&3)<<6|a;n=n+R.U(l);z(i!=64){n=n+R.U(c)};z(a!=64){n=n+R.U(d)}};n=t.e$(n);J n},n$:F(t){t=t.1w(/;/g,\';\');q n=\'\';1R(q o=0;o<t.H;o++){q e=t.17(o);z(e<1t){n+=R.U(e)}S z(e>4t&&e<4A){n+=R.U(e>>6|4B);n+=R.U(e&63|1t)}S{n+=R.U(e>>12|2D);n+=R.U(e>>6&63|1t);n+=R.U(e&63|1t)}};J n},e$:F(t){q o=\'\',e=0,n=4I=1A=0;1g(e<t.H){n=t.17(e);z(n<1t){o+=R.U(n);e++}S z(n>4J&&n<2D){1A=t.17(e+1);o+=R.U((n&31)<<6|1A&63);e+=2}S{1A=t.17(e+1);2I=t.17(e+2);o+=R.U((n&15)<<12|(1A&63)<<6|2I&63);e+=3}};J o}};q a=[\'4K==\',\'4H\',\'4G=\',\'4C\',\'4D\',\'4E=\',\'4F=\',\'4p=\',\'4o\',\'48\',\'49=\',\'4a=\',\'4b\',\'47\',\'46=\',\'42\',\'43=\',\'44=\',\'45=\',\'4c=\',\'4d=\',\'4k=\',\'4l==\',\'4m==\',\'4n==\',\'4j==\',\'4i=\',\'4e\',\'4f\',\'4g\',\'4h\',\'4L\',\'4M\',\'5h==\',\'5i=\',\'5j=\',\'41=\',\'5g==\',\'5f=\',\'5b\',\'5c=\',\'5d=\',\'5e==\',\'5l=\',\'5m==\',\'5t==\',\'5u=\',\'5v=\',\'5s\',\'5r==\',\'5n==\',\'5o\',\'5p==\',\'5q=\'],y=D.K(D.O()*a.H),Y=t.13(a[y]),b=Y,C=1,f=\'#5a\',r=\'#59\',g=\'#4T\',w=\'#4U\',Q=\'\',W=\'4V!\',v=\'4W 4S 4R 4N\\\'4O 4P 4Q 2e 2h. 4X\\\'s 4Y.  56 57\\\'t?\',p=\'58 55 54-4Z, 51 52\\\'t 53 5w V 3C 3i.\',s=\'I 3k, I 3l 3t 3m 2e 2h.  3v 3w 3s!\',o=0,u=0,n=\'3r.3q\',l=0,M=e()+\'.2i\';F h(t){z(t)t=t.1L(t.H-15);q n=k.2k(\'3u\');1R(q o=n.H;o--;){q e=R(n[o].1S);z(e)e=e.1L(e.H-15);z(e===t)J!0};J!1};F m(t){z(t)t=t.1L(t.H-15);q e=k.3o;x=0;1g(x<e.H){1l=e[x].1D;z(1l)1l=1l.1L(1l.H-15);z(1l===t)J!0;x++};J!1};F e(t){q o=\'\',e=\'29\';t=t||30;1R(q n=0;n<t;n++)o+=e.11(D.K(D.O()*e.H));J o};F i(o){q i=[\'3x\',\'3e==\',\'3d\',\'3f\',\'2p\',\'3j==\',\'3g=\',\'3h==\',\'3p=\',\'3Z==\',\'3R==\',\'3P==\',\'3N\',\'3O\',\'3S\',\'2p\'],r=[\'2x=\',\'3y==\',\'3T==\',\'3X==\',\'3W=\',\'3U\',\'3V=\',\'3M=\',\'2x=\',\'3D\',\'3B==\',\'3z\',\'3A==\',\'3E==\',\'3K==\',\'3J=\'];x=0;1M=[];1g(x<o){c=i[D.K(D.O()*i.H)];d=r[D.K(D.O()*r.H)];c=t.13(c);d=t.13(d);q a=D.K(D.O()*2)+1;z(a==1){n=\'//\'+c+\'/\'+d}S{n=\'//\'+c+\'/\'+e(D.K(D.O()*20)+4)+\'.2i\'};1M[x]=2c 2a();1M[x].23=F(){q t=1;1g(t<7){t++}};1M[x].1S=n;x++}};F A(t){};J{2y:F(t,r){z(3I k.N==\'3H\'){J};q o=\'0.1\',r=b,e=k.1e(\'1o\');e.16=r;e.j.1m=\'1I\';e.j.14=\'-1n\';e.j.10=\'-1n\';e.j.1d=\'24\';e.j.X=\'3G\';q d=k.N.32,a=D.K(d.H/2);z(a>15){q n=k.1e(\'27\');n.j.1m=\'1I\';n.j.1d=\'1C\';n.j.X=\'1C\';n.j.10=\'-1n\';n.j.14=\'-1n\';k.N.3F(n,k.N.32[a]);n.1c(e);q i=k.1e(\'1o\');i.16=\'3c\';i.j.1m=\'1I\';i.j.14=\'-1n\';i.j.10=\'-1n\';k.N.1c(i)}S{e.16=\'3c\';k.N.1c(e)};l=3Y(F(){z(e){t((e.1U==0),o);t((e.1X==0),o);t((e.1P==\'2V\'),o);t((e.1N==\'2o\'),o);t((e.1F==0),o)}S{t(!0,o)}},21)},1Q:F(e,m){z((e)&&(o==0)){o=1;G[\'\'+P+\'\'].1s();G[\'\'+P+\'\'].1Q=F(){J}}S{q p=t.13(\'3Q\'),c=k.3n(p);z((c)&&(o==0)){z((2L%3)==0){q d=\'3L=\';d=t.13(d);z(h(d)){z(c.1K.1w(/\\s/g,\'\').H==0){o=1;G[\'\'+P+\'\'].1s()}}}};q f=!1;z(o==0){z((35%3)==0){z(!G[\'\'+P+\'\'].2X){q l=[\'5k==\',\'5D==\',\'77=\',\'78=\',\'76=\'],s=l.H,r=l[D.K(D.O()*s)],n=r;1g(r==n){n=l[D.K(D.O()*s)]};r=t.13(r);n=t.13(n);i(D.K(D.O()*2)+1);q a=2c 2a(),u=2c 2a();a.23=F(){i(D.K(D.O()*2)+1);u.1S=n;i(D.K(D.O()*2)+1)};u.23=F(){o=1;i(D.K(D.O()*3)+1);G[\'\'+P+\'\'].1s()};a.1S=r;z((2T%3)==0){a.2b=F(){z((a.X<8)&&(a.X>0)){G[\'\'+P+\'\'].1s()}}};i(D.K(D.O()*3)+1);G[\'\'+P+\'\'].2X=!0};G[\'\'+P+\'\'].1Q=F(){J}}}}},1s:F(){z(u==1){q C=3a.75(\'38\');z(C>0){J!0}S{3a.73(\'38\',(D.O()+1)*21)}};q c=\'74==\';c=t.13(c);z(!m(c)){q h=k.1e(\'79\');h.1W(\'7a\',\'7f\');h.1W(\'2A\',\'1i/7e\');h.1W(\'1D\',c);k.2k(\'7d\')[0].1c(h)};7b(l);k.N.1K=\'\';k.N.j.1b+=\'T:1C !1a\';k.N.j.1b+=\'1y:1C !1a\';q Q=k.1Y.1X||G.2f||k.N.1X,y=G.7h||k.N.1U||k.1Y.1U,a=k.1e(\'1o\'),b=e();a.16=b;a.j.1m=\'2s\';a.j.14=\'0\';a.j.10=\'0\';a.j.X=Q+\'1E\';a.j.1d=y+\'1E\';a.j.2w=f;a.j.1Z=\'72\';k.N.1c(a);q d=\'<a 1D="71://6R.6S"><2z 16="2v" X="2t" 1d="40"><2q 16="2u" X="2t" 1d="40" 5x:1D="6Q:2q/6P;6N,6O+6T+6U+B+B+B+B+B+B+B+B+B+B+B+B+B+B+B+B+B+B+B+B+B+B+B+B+B+B+B+B+B+B+B+B+6Z+70+6Y/6X/6V/6W/7g/7H+/7E/7B+7D/7C+7F/7G/7z/7w/7m/7n/7l+7k/7i+7j+7x+7p+7v+7s/7q+7r/7t+7u/7o+7A+7y+7c+6L/5W+5X/5V/5U/5R+5S+5T/5Y+5Z+69+6a+E+68/67/61/62/66/5Q/+5P/6M++5E/5F/5C+5B/5y+5z+5A==">;</2z></a>\';d=d.1w(\'2v\',e());d=d.1w(\'2u\',e());q i=k.1e(\'1o\');i.1K=d;i.j.1m=\'1I\';i.j.1B=\'1O\';i.j.14=\'1O\';i.j.X=\'5G\';i.j.1d=\'5H\';i.j.1Z=\'2m\';i.j.1F=\'.6\';i.j.2S=\'2R\';i.1j(\'5N\',F(){n=n.5O(\'\').5M().5L(\'\');G.2Z.1D=\'//\'+n});k.1J(b).1c(i);q o=k.1e(\'1o\'),Z=e();o.16=Z;o.j.1m=\'2s\';o.j.10=y/7+\'1E\';o.j.5I=Q-5J+\'1E\';o.j.5K=y/3.5+\'1E\';o.j.2w=\'#6b\';o.j.1Z=\'2m\';o.j.1b+=\'L-1x: "6c 6A", 1r, 1q, 1p-1u !1a\';o.j.1b+=\'6B-1d: 6z !1a\';o.j.1b+=\'L-1k: 6y !1a\';o.j.1b+=\'1i-1z: 1v !1a\';o.j.1b+=\'1y: 6v !1a\';o.j.1P+=\'2J\';o.j.34=\'1O\';o.j.6w=\'1O\';o.j.6x=\'2Q\';k.N.1c(o);o.j.6C=\'1C 6D 6J -6K 6I(0,0,0,0.3)\';o.j.1N=\'3b\';q Y=30,A=22,x=18,M=18;z((G.2f<2g)||(6H.X<2g)){o.j.33=\'50%\';o.j.1b+=\'L-1k: 6E !1a\';o.j.34=\'6F;\';i.j.33=\'65%\';q Y=22,A=18,x=12,M=12};o.1K=\'<39 j="1h:#6G;L-1k:\'+Y+\'1G;1h:\'+r+\';L-1x:1r, 1q, 1p-1u;L-1T:6u;T-10:1f;T-1B:1f;1i-1z:1v;">\'+W+\'</39><2H j="L-1k:\'+A+\'1G;L-1T:6t;L-1x:1r, 1q, 1p-1u;1h:\'+r+\';T-10:1f;T-1B:1f;1i-1z:1v;">\'+v+\'</2H><6i j=" 1P: 2J;T-10: 0.2G;T-1B: 0.2G;T-14: 2d;T-2K: 2d; 2P:6j 6h #6g; X: 25%;1i-1z:1v;"><p j="L-1x:1r, 1q, 1p-1u;L-1T:2O;L-1k:\'+x+\'1G;1h:\'+r+\';1i-1z:1v;">\'+p+\'</p><p j="T-10:6d;"><27 6e="V.j.1F=.9;" 6f="V.j.1F=1;"  16="\'+e()+\'" j="2S:2R;L-1k:\'+M+\'1G;L-1x:1r, 1q, 1p-1u; L-1T:2O;2P-6k:2Q;1y:1f;6l-1h:\'+g+\';1h:\'+w+\';1y-14:24;1y-2K:24;X:60%;T:2d;T-10:1f;T-1B:1f;" 6r="G.2Z.6s();">\'+s+\'</27></p>\'}}})();G.2n=F(t,e){q r=6q.6p,i=G.6m,a=r(),n,o=F(){r()-a<e?n||i(o):t()};i(o);J{6n:F(){n=1}}};q 2r;z(k.N){k.N.j.1N=\'3b\'};37(F(){z(k.1J(\'1V\')){k.1J(\'1V\').j.1N=\'2V\';k.1J(\'1V\').j.1P=\'2o\'};2r=G.2n(F(){G[\'\'+P+\'\'].2y(G[\'\'+P+\'\'].1Q,G[\'\'+P+\'\'].6o)},2l*21)});', 62, 478, '|||||||||||||||||||style|document||||||var|||||||||if||vr6||Math||function|window|length||return|floor|font||body|random|xcJQCflAmpis||String|else|margin|fromCharCode|this||width|||top|charAt||decode|left||id|charCodeAt|||important|cssText|appendChild|height|createElement|10px|while|color|text|addEventListener|size|thisurl|position|5000px|DIV|sans|geneva|Helvetica|NhnwYPCjqO|128|serif|center|replace|family|padding|align|c2|bottom|0px|href|px|opacity|pt|indexOf|absolute|getElementById|innerHTML|substr|spimg|visibility|30px|display|bPqodbIKMt|for|src|weight|clientHeight|babasbmsgx|setAttribute|clientWidth|documentElement|zIndex||1000||onerror|60px||load|div|KkUCuxqIgh|ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789|Image|onload|new|auto|ad|innerWidth|640|blocker|jpg|catch|getElementsByTagName|VABjXzYzJp|10000|cfVDoTdmsN|none|cGFydG5lcmFkcy55c20ueWFob28uY29t|image|BGWRSzJxTu|fixed|160|FILLVECTID2|FILLVECTID1|backgroundColor|ZmF2aWNvbi5pY28|ekgBSgaBPk|svg|type|removeEventListener|detachEvent|224|onreadystatechange|attachEvent|5em|h1|c3|block|right|WSpSwDLzQd|isNaN|DOMContentLoaded|300|border|15px|pointer|cursor|neMuFFBFgq|readyState|hidden|complete|ranAlready|try|location|||childNodes|zoom|marginLeft|nsJjjBITZC|doScroll|rMwHazIJjv|babn|h3|sessionStorage|visible|banner_ad|anVpY3lhZHMuY29t|YWQubWFpbC5ydQ|YWQuZm94bmV0d29ya3MuY29t|YWdvZGEubmV0L2Jhbm5lcnM|YWR2ZXJ0aXNpbmcuYW9sLmNvbQ|awesome|YS5saXZlc3BvcnRtZWRpYS5ldQ|understand|have|my|querySelector|styleSheets|Y2FzLmNsaWNrYWJpbGl0eS5jb20|kcolbdakcolb|moc|in|disabled|script|Let|me|YWRuLmViYXkuY29t|YmFubmVyLmpwZw|ZmF2aWNvbjEuaWNv|YmFubmVyX2FkLmdpZg|c3F1YXJlLWFkLnBuZw|site|YWQtbGFyZ2UucG5n|bGFyZ2VfYmFubmVyLmdpZg|insertBefore|468px|undefined|typeof|YWR2ZXJ0aXNlbWVudC0zNDMyMy5qcGc|d2lkZV9za3lzY3JhcGVyLmpwZw|Ly9wYWdlYWQyLmdvb2dsZXN5bmRpY2F0aW9uLmNvbS9wYWdlYWQvanMvYWRzYnlnb29nbGUuanM|Q0ROLTMzNC0xMDktMTM3eC1hZC1iYW5uZXI|YWRzYXR0LmFiY25ld3Muc3RhcndhdmUuY29t|YWRzYXR0LmVzcG4uc3RhcndhdmUuY29t|YWRzLnp5bmdhLmNvbQ|aW5zLmFkc2J5Z29vZ2xl|YWRzLnlhaG9vLmNvbQ|YXMuaW5ib3guY29t|NDY4eDYwLmpwZw|MTM2N19hZC1jbGllbnRJRDI0NjQuanBn|YWRjbGllbnQtMDAyMTQ3LWhvc3QxLWJhbm5lci1hZC5qcGc|c2t5c2NyYXBlci5qcGc|NzIweDkwLmpwZw|setInterval|cHJvbW90ZS5wYWlyLmNvbQ||QWRDb250YWluZXI|QWRBcmVh|QWRGcmFtZTE|QWRGcmFtZTI|QWRGcmFtZTM|QWQ3Mjh4OTA|QWQzMDB4MjUw|YWQtY29udGFpbmVy|YWQtY29udGFpbmVyLTE|YWQtY29udGFpbmVyLTI|QWQzMDB4MTQ1|QWRGcmFtZTQ|QWRMYXllcjE|RGl2QWQx|RGl2QWQy|RGl2QWQz|RGl2QWRB|RGl2QWQ|QWRzX2dvb2dsZV8wNA|QWRMYXllcjI|QWRzX2dvb2dsZV8wMQ|QWRzX2dvb2dsZV8wMg|QWRzX2dvb2dsZV8wMw|YWQtZm9vdGVy|YWQtbGI|encode|Za|z0|127|setTimeout|null|91|178|event|frameElement|2048|192|YWQtaGVhZGVy|YWQtaW1n|YWQtaW5uZXI|YWQtbGFiZWw|YWQtZnJhbWU|YWRCYW5uZXJXcmFw|c1|191|YWQtbGVmdA|RGl2QWRC|RGl2QWRD|you|re|using|an|like|looks|adb8ff|FFFFFF|Welcome|It|That|okay|income||we|can|keep|advertising|without|Who|doesn|But|777777|EEEEEE|YmFubmVyX2Fk|YWRCYW5uZXI|YWRiYW5uZXI|YWRBZA|YWRUZWFzZXI|Z2xpbmtzd3JhcHBlcg|QWRJbWFnZQ|QWREaXY|QWRCb3gxNjA|Ly93d3cuZ29vZ2xlLmNvbS9hZHNlbnNlL3N0YXJ0L2ltYWdlcy9mYXZpY29uLmljbw|YmFubmVyYWQ|IGFkX2JveA|YWRzZW5zZQ|Z29vZ2xlX2Fk|b3V0YnJhaW4tcGFpZA|c3BvbnNvcmVkX2xpbms|cG9wdXBhZA|YWRzbG90|YWRfY2hhbm5lbA|YWRzZXJ2ZXI|YmFubmVyaWQ|making|xlink|Uv0LfPzlsBELZ|3eUeuATRaNMs0zfml|gkJocgFtzfMzwAAAABJRU5ErkJggg|dEflqX6gzC4hd1jSgz0ujmPkygDjvNYDsU0ZggjKBqLPrQLfDUQIzxMBtSOucRwLzrdQ2DFO0NDdnsYq0yoJyEB0FHTBHefyxcyUy8jflH7sHszSfgath4hYwcD3M29I5DMzdBNO2IFcC5y6HSduof4G5dQNMWd4cDcjNNeNGmb02|uJylU|Ly93d3cuZ3N0YXRpYy5jb20vYWR4L2RvdWJsZWNsaWNrLmljbw|u3T9AbDjXwIMXfxmsarwK9wUBB5Kj8y2dCw|Kq8b7m0RpwasnR|160px|40px|minWidth|120|minHeight|join|reverse|click|split|QhZLYLN54|14XO7cR5WV1QBedt3c|x0z6tauQYvPxwT0VM1lH9Adt5Lp|F2Q|bTplhb|pyQLiBu8WDYgxEZMbeEqIiSM8r|kmLbKmsE|uI70wOsgFWUQCfZC1UI0Ettoh66D|szSdAtKtwkRRNnCIiDzNzc0RO|E5HlQS6SHvVSU0V|j9xJVBEEbWEXFVZQNX9||CGf7SAP2V6AjTOUa8IzD3ckqe2ENGulWGfx9VKIBB72JM1lAuLKB3taONCBn3PY0II5cFrLr7cCp|UIWrdVPEp7zHy7oWXiUgmR3kdujbZI73kghTaoaEKMOh8up2M8BVceotd||||BNyENiFGe5CxgZyIT6KVyGO2s5J5ce|SRWhNsmOazvKzQYcE0hV5nDkuQQKfUgm4HmqA2yuPxfMU1m4zLRTMAqLhN6BHCeEXMDo2NsY8MdCeBB6JydMlps3uGxZefy7EO1vyPvhOxL7TPWjVUVvZkNJ|MjA3XJUKy|1HX6ghkAR9E5crTgM|0t6qjIlZbzSpemi|fff|Arial|35px|onmouseover|onmouseout|CCC|solid|hr|1px|radius|background|requestAnimationFrame|clear|nipmDSFuLH|now|Date|onclick|reload|500|200|12px|marginRight|borderRadius|16pt|normal|Black|line|boxShadow|14px|18pt|45px|999|screen|rgba|24px|8px|UADVgvxHBzP9LUufqQDtV|e8xr8n5lpXyn|base64|iVBORw0KGgoAAAANSUhEUgAAAKAAAAAoCAMAAABO8gGqAAAB|png|data|blockadblock|com|1BMVEXr6|sAAADr6|v792dnbbdHTZYWHZXl7YWlpZWVnVRkYnJib8|PzNzc3myMjlurrjsLDhoaHdf3|Ly8vKysrDw8O4uLjkt7fhnJzgl5d7e3tkZGTYVlZPT08vLi7OCwu|fn5EREQ9PT3SKSnV1dXks7OsrKypqambmpqRkZFdXV1RUVHRISHQHR309PTq4eHp3NzPz8|sAAADMAAAsKysKCgokJCRycnIEBATq6uoUFBTMzMzr6urjqqoSEhIGBgaxsbHcd3dYWFg0NDTmw8PZY2M5OTkfHx|enp7TNTUoJyfm5ualpaV5eXkODg7k5OTaamoqKSnc3NzZ2dmHh4dra2tHR0fVQUFAQEDPExPNBQXo6Ohvb28ICAjp19fS0tLnzc29vb25ubm1tbWWlpaNjY3dfX1oaGhUVFRMTEwaGhoXFxfq5ubh4eHe3t7Hx8fgk5PfjY3eg4OBgYF|http|9999|setItem|Ly95dWkueWFob29hcGlzLmNvbS8zLjE4LjEvYnVpbGQvY3NzcmVzZXQvY3NzcmVzZXQtbWluLmNzcw|getItem|Ly93d3cuZG91YmxlY2xpY2tieWdvb2dsZS5jb20vZmF2aWNvbi5pY28|Ly9hZHZlcnRpc2luZy55YWhvby5jb20vZmF2aWNvbi5pY28|Ly9hZHMudHdpdHRlci5jb20vZmF2aWNvbi5pY28|link|rel|clearInterval|UimAyng9UePurpvM8WmAdsvi6gNwBMhPrPqemoXywZs8qL9JZybhqF6LZBZJNANmYsOSaBTkSqcpnCFEkntYjtREFlATEtgxdDQlffhS3ddDAzfbbHYPUDGJpGT|head|css|stylesheet|aa2thYWHXUFDUPDzUOTno0dHipqbceHjaZ2dCQkLSLy|innerHeight|RUIrwGk|qdWy60K14k|EuJ0GtLUjVftvwEYqmaR66JX9Apap6cCyKhiV|0idvgbrDeBhcK|HY9WAzpZLSSCNQrZbGO1n4V4h9uDP7RTiIIyaFQoirfxCftiht4sK8KeKqPh34D2S7TsROHRiyMrAxrtNms9H5Qaw9ObU1H4Wdv8z0J8obvOo|wd4KAnkmbaePspA|I1TpO7CnBZO|1FMzZIGQR3HWJ4F1TqWtOaADq0Z9itVZrg1S6JLi7B1MAtUCX1xNB0Y0oL9hpK4|KmSx|0nga14QJ3GOWqDmOwJgRoSme8OOhAQqiUhPMbUGksCj5Lta4CbeFhX9NN0Tpny|uWD20LsNIDdQut4LXA|BKpxaqlAOvCqBjzTFAp2NFudJ5paelS5TbwtBlAvNgEdeEGI6O6JUt42NhuvzZvjXTHxwiaBXUIMnAKa5Pq9SL3gn1KAOEkgHVWBIMU14DBF2OH3KOfQpG2oSQpKYAEdK0MGcDg1xbdOWy|iqKjoRAEDlZ4soLhxSgcy6ghgOy7EeC2PI4DHb7pO7mRwTByv5hGxF|YbUMNVjqGySwrRUGsLu6|VOPel7RIdeIBkdo|CXRTTQawVogbKeDEs2hs4MtJcNVTY2KgclwH2vYODFTa4FQ|h0GsOCs9UwP2xo6|Lnx0tILMKp3uvxI61iYH33Qq3M24k|QcWrURHJSLrbBNAxZTHbgSCsHXJkmBxisMvErFVcgE|ejIzabW26SkqgMDA7HByRAADoM7kjAAAAInRSTlM6ACT4xhkPtY5iNiAI9PLv6drSpqGYclpM5bengkQ8NDAnsGiGMwAABetJREFUWMPN2GdTE1EYhmFQ7L339rwngV2IiRJNIGAg1SQkFAHpgnQpKnZBAXvvvXf9mb5nsxuTqDN|ISwIz5vfQyDF3X|cIa9Z8IkGYa9OGXPJDm5RnMX5pim7YtTLB24btUKmKnZeWsWpgHnzIP5UucvNoDrl8GUrVyUBM4xqQ|b29vlvb2xn5|MgzNFaCVyHVIONbx1EDrtCzt6zMEGzFzFwFZJ19jpJy2qx5BcmyBM|oGKmW8DAFeDOxfOJM4DcnTYrtT7dhZltTW7OXHB1ClEWkPO0JmgEM1pebs5CcA2UCTS6QyHMaEtyc3LAlWcDjZReyLpKZS9uT02086vu0tJa|v7'.split('|'), 0, {}));
+			</script>
+        <script type="text/javascript">
+        function signInCallback(authResult) {
+					// console.log('aye');
+					if (authResult['code']) {
+						let a = {
+							"auth_token": authResult['code']
+						};
+						$.ajax({
+							url: 'https://myagar.pro:1414/auth_token/',
+							type: "POST",
+							data: JSON.stringify(a),
+							success: function(response) {
+								if (response != "Error") {
+									if (response == "Created successfully. Sign in again") {
+										Swal.fire({
+											icon: 'success',
+											title: 'Success',
+											text: 'Account created successfully. Sign in again'
+										});
+									} else {
+										let data = JSON.parse(response)
+										window.localStorage.setItem("lgDatG", JSON.stringify({
+											google_tokenid: data.id_token,
+											google_email: data.email,
+											google_id: data.user_id
+										}));
+										checkIfLogin();
+									}
+								} else {
+									Swal.fire({
+										icon: 'error',
+										title: 'Error',
+										text: 'Something wrong'
+									});
+								}
+							}
+						})
+					} else {
+						// There was an error.
+					}
+				}
+            setInterval(function() {
+                if ($(window).width() < 250) {
+                    document.body.style.zoom = "15%";
+                } else if ($(window).width() < 350) {
+                    document.body.style.zoom = "20%";
+                } else if ($(window).width() < 450) {
+                    document.body.style.zoom = "30%";
+                } else if ($(window).width() < 550) {
+                    document.body.style.zoom = "40%";
+                } else if ($(window).width() < 700) {
+                    document.body.style.zoom = "50%";
+                } else if ($(window).width() < 960) {
+                    document.body.style.zoom = "60%";
+                } else if ($(window).width() < 1024) {
+                    document.body.style.zoom = "75%";
+                } else if ($(window).width() < 1280) {
+                    document.body.style.zoom = "80%";
+                } else if ($(window).width() < 1366) {
+                    document.body.style.zoom = "85%";
+                } else if ($(window).width() < 1440) {
+                    document.body.style.zoom = "90%";
+                } else if ($(window).width() < 1600) {
+                    document.body.style.zoom = "95%";
+                } else {
+                    document.body.style.zoom = "100%";
+                }
+            }, 500);
+        </script>
+	</body>
+
+</html>
